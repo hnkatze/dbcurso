@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens — ported from the original Tailwind v3 config
+   to Tailwind v4 CSS-first @theme. Every color/font/shadow the
+   components reference lives here.
+   ============================================================ */
+@theme {
+  /* Fonts (CSS variables come from next/font in app/layout.tsx) */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Neutrals — warm paper palette */
+  --color-cream: #fbf7ed;
+  --color-cream-deep: #f4ecd8;
+  --color-paper: #ffffff;
+  --color-paper-soft: #fffaf0;
+  --color-ink: #1a1611;
+  --color-ink-soft: #4a3d2f;
+  --color-ink-mute: #8a7766;
+  --color-line: #e6dac8;
+  --color-line-soft: #efe6d4;
+
+  /* Accent — sun (amber) */
+  --color-sun-50: #fef3c7;
+  --color-sun-100: #fde68a;
+  --color-sun-300: #fcd34d;
+  --color-sun-500: #f59e0b;
+  --color-sun-700: #92400e;
+
+  /* Accent — sea (blue) */
+  --color-sea-50: #dbeafe;
+  --color-sea-100: #bfdbfe;
+  --color-sea-300: #93c5fd;
+  --color-sea-500: #3b82f6;
+  --color-sea-700: #1e3a8a;
+
+  /* Accent — rose (pink) */
+  --color-rose-50: #fce7f3;
+  --color-rose-100: #fbcfe8;
+  --color-rose-300: #f9a8d4;
+  --color-rose-500: #f472b6;
+  --color-rose-700: #be185d;
+
+  /* Accent — mint (green) */
+  --color-mint-50: #d1fae5;
+  --color-mint-100: #bbf7d0;
+  --color-mint-300: #6ee7b7;
+  --color-mint-500: #22c55e;
+  --color-mint-700: #15803d;
+
+  /* Accent — lav (violet) */
+  --color-lav-50: #ede9fe;
+  --color-lav-100: #ddd6fe;
+  --color-lav-300: #c4b5fd;
+  --color-lav-500: #8b5cf6;
+  --color-lav-700: #5b21b6;
+
+  /* Shadows */
+  --shadow-paper: 0 1px 0 rgba(26, 22, 17, 0.04), 0 2px 8px rgba(26, 22, 17, 0.04);
+  --shadow-paper2: 0 2px 0 rgba(26, 22, 17, 0.05), 0 8px 24px rgba(26, 22, 17, 0.06);
+  --shadow-pop: 0 1px 0 rgba(26, 22, 17, 0.08), 0 14px 40px rgba(26, 22, 17, 0.1);
+}
+
+/* ============================================================
+   Custom CSS — only what Tailwind can't express cleanly:
+   keyframes, syntax-highlighting tokens, and the editor overlay.
+   ============================================================ */
+
+/* Clean scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(26, 22, 17, 0.12); border-radius: 100px; border: 2px solid #fbf7ed; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26, 22, 17, 0.22); }
+
+/* Keyframes */
+@keyframes table-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-12px); background: rgba(34, 197, 94, 0.5); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes row-out {
+  0%   { background: rgba(244, 114, 182, 0.35); }
+  100% { opacity: 0; transform: translateX(20px); background: rgba(244, 114, 182, 0.35); }
+}
+@keyframes cell-flash {
+  0%   { background: rgba(59, 130, 246, 0.45); }
+  100% { background: transparent; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.anim-table-in { animation: table-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.anim-row-in   { animation: row-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2); background: rgba(34, 197, 94, 0.18); }
+.anim-row-out  { animation: row-out 0.45s ease forwards; }
+.anim-row-upd td { animation: cell-flash 0.7s ease; }
+.anim-fade-up  { animation: fade-up 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-table-in,
+  .anim-row-in,
+  .anim-row-out,
+  .anim-row-upd td,
+  .anim-fade-up {
+    animation: none;
+  }
+}
+
+/* Editor overlay: transparent textarea over a highlighted <pre> */
+.editor-wrap {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+.editor-wrap > textarea,
+.editor-wrap > pre {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 16px 20px;
+  font: inherit;
+  white-space: pre;
+  overflow: auto;
+}
+.editor-wrap > textarea {
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: transparent;
+  caret-color: #1a1611;
+  z-index: 2;
+}
+.editor-wrap > textarea::selection { background: rgba(245, 158, 11, 0.25); }
+.editor-wrap > pre {
+  z-index: 1;
+  pointer-events: none;
+  color: #1a1611;
+}
+
+/* Syntax tokens (light bg in editor) */
+.tok-kw      { color: #be185d; font-weight: 600; }
+.tok-type    { color: #1e3a8a; font-weight: 600; }
+.tok-fn      { color: #5b21b6; font-weight: 600; }
+.tok-str     { color: #15803d; }
+.tok-num     { color: #92400e; }
+.tok-comment { color: #8a7766; font-style: italic; }
+.tok-punc    { color: #8a7766; }
+
+/* Syntax tokens (dark bg in code snippets) */
+.snippet-dark .tok-kw      { color: #fbcfe8; font-weight: 600; }
+.snippet-dark .tok-type    { color: #93c5fd; font-weight: 600; }
+.snippet-dark .tok-fn      { color: #c4b5fd; font-weight: 600; }
+.snippet-dark .tok-str     { color: #6ee7b7; }
+.snippet-dark .tok-num     { color: #fcd34d; }
+.snippet-dark .tok-comment { color: rgba(255, 255, 255, 0.4); font-style: italic; }
+.snippet-dark .tok-punc    { color: rgba(255, 255, 255, 0.5); }
+
+/* Dotted canvas background behind the table viz */
+.viz-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(26, 22, 17, 0.08) 1px, transparent 0);
+  background-size: 18px 18px;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
