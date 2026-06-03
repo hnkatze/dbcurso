@@ -12,7 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Legacy CDN/Babel SPA kept only as migration reference — not part of the app.
+    "DBs/**",
   ]),
+  {
+    rules: {
+      // Spanish copy uses plenty of apostrophes/quotes in JSX text; they render
+      // fine and escaping them hurts readability. Cosmetic rule, turned off.
+      "react/no-unescaped-entities": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;
