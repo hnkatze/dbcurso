@@ -282,7 +282,17 @@ class Parser {
         let typeArgs: string | number | null = null;
         if (this.is("type")) {
           type = String(this.take().value);
-          if (this.op("(")) { this.take(); typeArgs = this.take().value; this.consume("op", ")"); }
+          if (this.op("(")) {
+            this.take();
+            // Collect every comma-separated arg, e.g. DECIMAL(10,2), VARCHAR(80).
+            const args: (string | number)[] = [];
+            while (!this.op(")") && !this.eof()) {
+              args.push(this.take().value as string | number);
+              if (this.op(",")) this.take();
+            }
+            this.consume("op", ")");
+            typeArgs = args.join(",");
+          }
         }
         const colDef: ColumnDef = { name: colName, type, typeArgs, pk: false, notNull: false, autoIncrement: false, fk: null, defaultValue: undefined };
         while (true) {
@@ -325,7 +335,17 @@ class Parser {
       if (this.kw("COLUMN")) this.take();
       const colName = String(this.consume("ident").value);
       let type = "TEXT";
-      if (this.is("type")) type = String(this.take().value);
+      if (this.is("type")) {
+        type = String(this.take().value);
+        if (this.op("(")) {
+          // Skip type args, e.g. DECIMAL(10,2).
+          this.take();
+          while (!this.op(")") && !this.eof()) this.take();
+          if (this.op(")")) this.take();
+        }
+      }
+      // Tolerate (and ignore) trailing modifiers like DEFAULT x or NOT NULL.
+      while (!this.eof() && !this.is("op", ";")) this.take();
       return { kind: "alter-add", table: name, col: { name: colName, type } };
     }
     if (this.kw("DROP")) {

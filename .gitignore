@@ -50,3 +50,6 @@ claude-rules.lock.json
 DBs/*
 AGENTS.md
 CLAUDE.md
+
+# Local scratch / manual test material
+test-queries.sql
