@@ -41,7 +41,10 @@ function SqlEditor({
 }) {
   const taRef = useRef<HTMLTextAreaElement>(null);
   const preRef = useRef<HTMLPreElement>(null);
+  const runBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Keep the highlighted <pre> scrolled in lockstep with the textarea so the
+  // coloured text stays aligned with the caret on long queries.
   useEffect(() => {
     const ta = taRef.current;
     const pre = preRef.current;
@@ -58,18 +61,27 @@ function SqlEditor({
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       onRun();
+      return;
+    }
+    // Tab is captured for indentation, so give keyboard users an escape hatch.
+    if (e.key === "Escape") {
+      e.preventDefault();
+      runBtnRef.current?.focus();
+      return;
     }
     if (e.key === "Tab") {
       e.preventDefault();
       const ta = e.currentTarget;
-      const s = ta.selectionStart;
-      const en = ta.selectionEnd;
-      const v = ta.value;
-      const next = v.slice(0, s) + "  " + v.slice(en);
-      onChange(next);
-      requestAnimationFrame(() => {
-        ta.selectionStart = ta.selectionEnd = s + 2;
-      });
+      // Prefer execCommand so the browser's native undo/redo stack survives.
+      if (!document.execCommand("insertText", false, "  ")) {
+        const s = ta.selectionStart;
+        const en = ta.selectionEnd;
+        const v = ta.value;
+        onChange(v.slice(0, s) + "  " + v.slice(en));
+        requestAnimationFrame(() => {
+          ta.selectionStart = ta.selectionEnd = s + 2;
+        });
+      }
     }
   };
 
@@ -81,7 +93,7 @@ function SqlEditor({
         </div>
       </div>
       <div className="editor-wrap bg-cream relative min-h-[280px] flex-1">
-        <HighlightedCode source={value + (value.endsWith("\n") ? " " : "")} />
+        <HighlightedCode ref={preRef} source={value + (value.endsWith("\n") ? " " : "")} />
         <textarea
           ref={taRef}
           value={value}
@@ -90,12 +102,12 @@ function SqlEditor({
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          aria-label="Editor SQL"
+          aria-label="Editor SQL. Tab indenta; Escape sale del editor."
         />
-        <pre ref={preRef} style={{ display: "none" }} />
       </div>
       <div className="bg-paper border-line-soft flex flex-wrap items-center gap-2 border-t px-3 py-2.5">
         <button
+          ref={runBtnRef}
           onClick={onRun}
           title="Cmd/Ctrl + Enter"
           className="bg-ink text-cream inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-[13px] font-medium transition hover:bg-[#2a221a] active:translate-y-px"

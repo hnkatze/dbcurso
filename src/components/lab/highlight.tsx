@@ -1,3 +1,5 @@
+import type { Ref } from "react";
+
 /**
  * SQL syntax highlighter — pure, no hooks, safe in Server Components.
  * Ported from the highlighter in DBs/editor.jsx.
@@ -80,10 +82,18 @@ export function highlight(src: string): HlPart[] {
   return out;
 }
 
-export function HighlightedCode({ source, className = "" }: { source: string; className?: string }) {
+export function HighlightedCode({
+  source,
+  className = "",
+  ref,
+}: {
+  source: string;
+  className?: string;
+  ref?: Ref<HTMLPreElement>;
+}) {
   const parts = highlight(source);
   return (
-    <pre className={className}>
+    <pre ref={ref} className={className}>
       {parts.map((p, idx) => (
         <span key={idx} className={p.cls}>
           {p.text}
