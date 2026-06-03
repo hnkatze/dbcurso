@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
-import { Sidebar } from "@/components/layout/sidebar";
-import { LessonFooter } from "@/components/layout/footer";
+import { AppShell } from "@/components/layout/app-shell";
+import "@xyflow/react/dist/style.css";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -49,16 +49,7 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
-        <div className="min-h-screen grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)]">
-          <Sidebar />
-          <main
-            id="main"
-            className="mx-auto w-full max-w-[1200px] px-7 py-14 pb-24 md:px-16"
-          >
-            {children}
-            <LessonFooter />
-          </main>
-        </div>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
