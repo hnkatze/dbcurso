@@ -29,15 +29,16 @@ export const MODULES: readonly CourseSection[] = [
       { id: "keys", num: "04", label: "Llaves PK / FK", href: "/sql/keys" },
       { id: "joins", num: "05", label: "JOINs", href: "/sql/joins" },
       { id: "group", num: "06", label: "GROUP BY · Subconsultas", href: "/sql/group" },
+      { id: "ventas", num: "07", label: "Caso real · Ventas", href: "/sql/ventas" },
     ],
   },
   {
     section: "NoSQL",
     items: [
-      { id: "redis", num: "07", label: "Redis", href: "/nosql/redis" },
-      { id: "mongo", num: "08", label: "MongoDB", href: "/nosql/mongo" },
-      { id: "firebase", num: "09", label: "Firebase", href: "/nosql/firebase" },
-      { id: "cassandra", num: "10", label: "Cassandra", href: "/nosql/cassandra" },
+      { id: "redis", num: "08", label: "Redis", href: "/nosql/redis" },
+      { id: "mongo", num: "09", label: "MongoDB", href: "/nosql/mongo" },
+      { id: "firebase", num: "10", label: "Firebase", href: "/nosql/firebase" },
+      { id: "cassandra", num: "11", label: "Cassandra", href: "/nosql/cassandra" },
     ],
   },
 ] as const;
