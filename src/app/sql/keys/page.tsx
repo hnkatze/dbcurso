@@ -70,6 +70,7 @@ export default function KeysPage() {
       </P>
 
       <Lab
+        canvas
         labId="lab-keys"
         initialSql={`CREATE TABLE usuarios (
   id     INT PRIMARY KEY AUTO_INCREMENT,

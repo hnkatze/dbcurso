@@ -12,6 +12,7 @@ import {
   type Table,
 } from "@/lib/engines/sql";
 import { HighlightedCode } from "./highlight";
+import { TableCanvas } from "./table-canvas";
 
 interface Sample {
   label: string;
@@ -348,9 +349,11 @@ export interface LabProps {
   samples?: Sample[];
   autorun?: boolean;
   labId?: string;
+  /** Render the schema as an interactive React Flow ERD instead of the grid viz. */
+  canvas?: boolean;
 }
 
-export function Lab({ initialSql, initialState, samples, autorun, labId = "lab" }: LabProps) {
+export function Lab({ initialSql, initialState, samples, autorun, labId = "lab", canvas = false }: LabProps) {
   function buildInitialDb(state?: { sql: string }): Database {
     const d = new Database();
     if (state && state.sql) run(d, state.sql);
@@ -458,34 +461,51 @@ export function Lab({ initialSql, initialState, samples, autorun, labId = "lab" 
       <div className="grid min-h-[360px] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <SqlEditor value={sql} onChange={setSql} onRun={run_} onReset={reset} status={status} samples={samples} />
         <div className="bg-cream overflow-auto p-5">
-          <div className="viz-dots min-h-[320px] rounded-xl p-5">
-            {tableNames.length === 0 ? (
-              <div className="text-ink-mute grid h-[280px] place-items-center text-center text-[13.5px]">
+          {canvas ? (
+            tableNames.length === 0 ? (
+              <div className="border-line bg-paper text-ink-mute grid h-[440px] place-items-center rounded-xl border text-center text-[13.5px]">
                 <div>
                   <div className="font-display text-line mb-2 text-[64px] leading-none italic">∅</div>
                   <div>
                     Aún no hay tablas. Escribe{" "}
-                    <code className="bg-cream-deep rounded px-1.5 py-0.5 font-mono">CREATE TABLE</code> y dale{" "}
-                    <strong>Ejecutar</strong>.
+                    <code className="bg-cream-deep rounded px-1.5 py-0.5 font-mono">CREATE TABLE</code> con{" "}
+                    <code className="bg-cream-deep rounded px-1.5 py-0.5 font-mono">REFERENCES</code> y mira el diagrama.
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-wrap items-start gap-7">
-                {tableNames.map((name) => (
-                  <TableCard
-                    key={name}
-                    table={db.tables[name]!}
-                    tint={tintFor(name, tableNames)}
-                    hitIndices={hits[name]}
-                    addedIndices={added[name]}
-                    updatedIndices={updated[name]}
-                    deletedRows={deleted[name] || []}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+              <TableCanvas tables={db.tables} />
+            )
+          ) : (
+            <div className="viz-dots min-h-[320px] rounded-xl p-5">
+              {tableNames.length === 0 ? (
+                <div className="text-ink-mute grid h-[280px] place-items-center text-center text-[13.5px]">
+                  <div>
+                    <div className="font-display text-line mb-2 text-[64px] leading-none italic">∅</div>
+                    <div>
+                      Aún no hay tablas. Escribe{" "}
+                      <code className="bg-cream-deep rounded px-1.5 py-0.5 font-mono">CREATE TABLE</code> y dale{" "}
+                      <strong>Ejecutar</strong>.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-wrap items-start gap-7">
+                  {tableNames.map((name) => (
+                    <TableCard
+                      key={name}
+                      table={db.tables[name]!}
+                      tint={tintFor(name, tableNames)}
+                      hitIndices={hits[name]}
+                      addedIndices={added[name]}
+                      updatedIndices={updated[name]}
+                      deletedRows={deleted[name] || []}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           <ResultPanel result={result} error={error} logs={logs} />
         </div>
       </div>
