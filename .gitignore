@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI assistants & dev-only tooling (not part of the app — kept local)
+.claude/
+.atl/
+.codegraph/
+.mcp.json
+claude-rules.json
+claude-rules.lock.json
+DBs/*
+AGENTS.md
+CLAUDE.md
