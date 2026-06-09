@@ -87,7 +87,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                 const active = pathname === item.href;
                 const Icon = ICONS[item.id] ?? Database;
                 return (
-                  <li key={item.id} className={collapsed ? "" : ""}>
+                  <li key={item.id}>
                     <Link
                       href={item.href}
                       aria-current={active ? "page" : undefined}
