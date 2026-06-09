@@ -41,6 +41,10 @@ export const MODULES: readonly CourseSection[] = [
       { id: "cassandra", num: "11", label: "Cassandra", href: "/nosql/cassandra" },
     ],
   },
+  {
+    section: "Práctica",
+    items: [{ id: "desafios", num: "12", label: "Desafíos", href: "/desafios" }],
+  },
 ] as const;
 
 /** Flat, ordered list of every lesson — used for prev/next. */

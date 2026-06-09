@@ -16,6 +16,7 @@ import {
   ShoppingCart,
   Sigma,
   TableProperties,
+  Trophy,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -35,6 +36,7 @@ const ICONS: Record<string, LucideIcon> = {
   mongo: Leaf,
   firebase: Flame,
   cassandra: Network,
+  desafios: Trophy,
 };
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
