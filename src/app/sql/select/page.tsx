@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Concept, ConceptRow, Callout, H1, H2, Lede, P } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { SELECT_LESSON } from "@/lib/challenges/select";
 
 export const metadata: Metadata = {
   title: "SELECT, WHERE, ORDER",
@@ -72,26 +74,7 @@ LIMIT 5;`}
       <H2 num="05">Laboratorio · explora 10 filas</H2>
       <Lab
         labId="lab-select"
-        initialState={{
-          sql: `CREATE TABLE productos (
-  id INT PRIMARY KEY,
-  nombre VARCHAR(60),
-  categoria VARCHAR(30),
-  precio DECIMAL(10,2),
-  stock INT
-);
-INSERT INTO productos VALUES
-  (1, 'Café Sierra Nevada', 'Café',    32000, 18),
-  (2, 'Café del Huila',     'Café',    28000, 25),
-  (3, 'Café Tolima',        'Café',    30000,  6),
-  (4, 'Té verde',           'Té',      12000, 12),
-  (5, 'Té manzanilla',      'Té',       9500, 30),
-  (6, 'Galletas integral',  'Snack',    6000,  4),
-  (7, 'Chocolate amargo',   'Snack',   22000,  8),
-  (8, 'Azúcar morena',      'Despensa', 4500, 25),
-  (9, 'Panela',             'Despensa', 3200, 40),
-  (10,'Cacao en polvo',     'Despensa',15000, 11);`,
-        }}
+        initialState={{ sql: SELECT_LESSON.schema }}
         initialSql={`-- Top 5 productos más caros\nSELECT nombre, precio FROM productos\nORDER BY precio DESC\nLIMIT 5;`}
         autorun
         samples={[
@@ -115,6 +98,13 @@ INSERT INTO productos VALUES
         Cuando escribas un SELECT complejo, lee tu propia consulta empezando por el <code>FROM</code>: “de productos,
         filtrar X, ordenar por Y, mostrar Z”. Casi todos los bugs aparecen leyendo así.
       </Callout>
+
+      <H2 num="06">Desafíos · ponete a prueba</H2>
+      <P>
+        Tres retos sobre la misma tabla <code>productos</code>, de menor a mayor dificultad. Escribí tu consulta y dale{" "}
+        <strong>Comprobar</strong>: se valida por el <em>resultado</em>, así que cualquier camino correcto sirve.
+      </P>
+      <ChallengeBoard schema={SELECT_LESSON.schema} challenges={SELECT_LESSON.challenges} />
     </div>
   );
 }

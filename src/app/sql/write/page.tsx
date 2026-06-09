@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Callout, H1, H2, Lede, P, UL } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { WRITE_LESSON } from "@/lib/challenges/write";
 
 export const metadata: Metadata = {
   title: "INSERT / UPDATE / DELETE",
@@ -97,6 +99,10 @@ INSERT INTO productos (nombre, precio, stock) VALUES
         En producción, las modificaciones se agrupan en <strong>transacciones</strong>. Si una de las operaciones falla,
         el motor revierte todas las anteriores. Lo verás como <code>BEGIN ... COMMIT / ROLLBACK</code>.
       </Callout>
+
+      <H2 num="05">Desafíos · ponete a prueba</H2>
+      <P>Tres retos de modificación de datos, de menor a mayor dificultad. Escribí tu consulta y dale <strong>Comprobar</strong>.</P>
+      <ChallengeBoard schema={WRITE_LESSON.schema} challenges={WRITE_LESSON.challenges} />
     </div>
   );
 }

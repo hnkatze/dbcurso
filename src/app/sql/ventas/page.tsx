@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Callout, H1, H2, Lede, P, UL } from "@/components/content";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { VENTAS_LESSON } from "@/lib/challenges/ventas";
 
 export const metadata: Metadata = {
   title: "Caso real · Ventas",
@@ -156,6 +158,13 @@ GROUP BY estado;`,
         profundizar sobre esta misma base. Ahora sí, saltemos a <strong>NoSQL</strong> para ver otra forma de pensar los
         datos.
       </Callout>
+
+      <H2 num="03">Desafíos · ponete a prueba</H2>
+      <P>
+        Tres consultas sobre el modelo de ventas completo, de menor a mayor dificultad. Escribí tu consulta y dale{" "}
+        <strong>Comprobar</strong>.
+      </P>
+      <ChallengeBoard schema={VENTAS_LESSON.schema} challenges={VENTAS_LESSON.challenges} />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Concept, ConceptRow, Callout, H1, H2, Lede, P, UL } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { GROUP_LESSON } from "@/lib/challenges/group";
 
 export const metadata: Metadata = {
   title: "GROUP BY · Subconsultas",
@@ -124,6 +126,10 @@ ORDER BY precio DESC;`,
         Si una columna aparece en <code>SELECT</code> pero no es una agregación, <strong>tiene</strong> que estar en{" "}
         <code>GROUP BY</code>. Si no la pones, te quedas con un valor cualquiera del grupo.
       </Callout>
+
+      <H2 num="05">Desafíos · ponete a prueba</H2>
+      <P>Tres retos de agregación, de menor a mayor dificultad. Escribí tu consulta y dale <strong>Comprobar</strong>.</P>
+      <ChallengeBoard schema={GROUP_LESSON.schema} challenges={GROUP_LESSON.challenges} />
     </div>
   );
 }

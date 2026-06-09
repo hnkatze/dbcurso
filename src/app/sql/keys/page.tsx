@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Concept, ConceptRow, Callout, H1, H2, Lede, P, UL } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { KEYS_LESSON } from "@/lib/challenges/keys";
 
 export const metadata: Metadata = {
   title: "Llaves PK / FK",
@@ -117,6 +119,13 @@ INSERT INTO pedidos (usuario_id, total) VALUES
           <strong>tabla puente</strong>: <code>producto_categoria(producto_id, categoria_id)</code>.
         </Concept>
       </ConceptRow>
+
+      <H2 num="05">Desafíos · ponete a prueba</H2>
+      <P>
+        Tres retos sobre llaves primarias y foráneas, de menor a mayor dificultad. Escribí tu consulta y dale{" "}
+        <strong>Comprobar</strong>.
+      </P>
+      <ChallengeBoard schema={KEYS_LESSON.schema} challenges={KEYS_LESSON.challenges} />
     </div>
   );
 }

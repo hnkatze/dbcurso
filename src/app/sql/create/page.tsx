@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Concept, ConceptRow, Callout, H1, H2, Lede, P, UL } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { CREATE_LESSON } from "@/lib/challenges/create";
 
 export const metadata: Metadata = {
   title: "CREATE / ALTER",
@@ -114,6 +116,13 @@ ALTER TABLE productos DROP COLUMN stock;`}
         Cambiar el esquema con tráfico vivo se llama <em>migración</em>. Existen herramientas como Flyway, Liquibase o las
         migrations de Django/Rails que aplican cambios de forma <strong>versionada</strong>. Lección para más adelante.
       </Callout>
+
+      <H2 num="05">Desafíos · ponete a prueba</H2>
+      <P>
+        Tres retos de creación y modificación de esquema, de menor a mayor dificultad. Escribí tu consulta y dale{" "}
+        <strong>Comprobar</strong>.
+      </P>
+      <ChallengeBoard schema={CREATE_LESSON.schema} challenges={CREATE_LESSON.challenges} />
     </div>
   );
 }

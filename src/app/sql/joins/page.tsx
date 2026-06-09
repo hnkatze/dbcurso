@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Concept, ConceptRow, Callout, H1, H2, Lede, P } from "@/components/content";
 import { Snippet } from "@/components/lab/highlight";
 import { Lab } from "@/components/lab/lab";
+import { ChallengeBoard } from "@/components/lab/challenge";
+import { JOINS_LESSON } from "@/lib/challenges/joins";
 
 export const metadata: Metadata = {
   title: "JOINs",
@@ -108,6 +110,10 @@ ORDER BY gastado DESC;`,
         fila de B. Si tienes 1.000 y 1.000, te salen <strong>un millón de filas</strong>. El motor no se queja, pero el
         servidor sí.
       </Callout>
+
+      <H2 num="05">Desafíos · ponete a prueba</H2>
+      <P>Tres retos con JOINs, de menor a mayor dificultad. Escribí tu consulta y dale <strong>Comprobar</strong>.</P>
+      <ChallengeBoard schema={JOINS_LESSON.schema} challenges={JOINS_LESSON.challenges} />
     </div>
   );
 }
