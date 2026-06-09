@@ -13,6 +13,7 @@ import {
   PanelLeftOpen,
   Pencil,
   Search,
+  ShieldCheck,
   ShoppingCart,
   Sigma,
   TableProperties,
@@ -36,6 +37,7 @@ const ICONS: Record<string, LucideIcon> = {
   mongo: Leaf,
   firebase: Flame,
   cassandra: Network,
+  auditoria: ShieldCheck,
   desafios: Trophy,
 };
 

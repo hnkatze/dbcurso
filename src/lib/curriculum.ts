@@ -42,8 +42,12 @@ export const MODULES: readonly CourseSection[] = [
     ],
   },
   {
+    section: "Administración",
+    items: [{ id: "auditoria", num: "12", label: "Auditoría de datos", href: "/admin/auditoria" }],
+  },
+  {
     section: "Práctica",
-    items: [{ id: "desafios", num: "12", label: "Desafíos", href: "/desafios" }],
+    items: [{ id: "desafios", num: "13", label: "Desafíos", href: "/desafios" }],
   },
 ] as const;
 

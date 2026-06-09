@@ -14,6 +14,7 @@ import { KEYS_LESSON } from "./keys";
 import { JOINS_LESSON } from "./joins";
 import { GROUP_LESSON } from "./group";
 import { VENTAS_LESSON } from "./ventas";
+import { AUDITORIA_LESSON } from "./auditoria";
 
 /** Ordered to mirror the SQL track in the curriculum. */
 export const ALL_LESSONS: readonly LessonChallenges[] = [
@@ -24,6 +25,7 @@ export const ALL_LESSONS: readonly LessonChallenges[] = [
   JOINS_LESSON,
   GROUP_LESSON,
   VENTAS_LESSON,
+  AUDITORIA_LESSON,
 ];
 
 export const NIVEL_ORDER: readonly Nivel[] = ["basico", "intermedio", "avanzado"];
