@@ -35,7 +35,7 @@ export function ChallengeCard({
   /** Fired the first time this challenge is solved (for hub progress). */
   onSolved?: () => void;
 }) {
-  const [sql, setSql] = useState("");
+  const [sql, setSql] = useState(challenge.starter ?? "");
   const [res, setRes] = useState<CheckResult | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [solved, setSolved] = useState(false);

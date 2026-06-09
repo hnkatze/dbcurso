@@ -23,6 +23,11 @@ export interface Challenge {
   /** The correct query — the expected result is derived from running this. */
   readonly solution: string;
   /**
+   * SQL pre-loaded into the editor. Used by "repair" challenges to show the
+   * broken query so the learner runs it, sees the engine's error, and fixes it.
+   */
+  readonly starter?: string;
+  /**
    * A SELECT run AFTER `solution`/the learner's query to inspect the resulting
    * state. Required for challenges whose main query mutates data or DDL.
    */
