@@ -12,6 +12,7 @@
 - [JOINs](#joins)
 - [GROUP BY · Subconsultas](#group)
 - [Caso real · Ventas](#ventas)
+- [Auditoría de datos](#auditoria)
 
 ---
 
@@ -899,6 +900,232 @@ ORDER BY ingresos DESC;
 | Café | 92000 |
 | Té | 36000 |
 | Snacks | 6000 |
+
+
+---
+
+
+## Auditoría de datos
+
+<a id="auditoria"></a>
+
+Ruta: `/admin/auditoria`
+
+
+<details>
+<summary>Esquema base (datos sobre los que se resuelve)</summary>
+
+
+```sql
+CREATE TABLE clientes (
+  id     INT PRIMARY KEY,
+  nombre VARCHAR(60) NOT NULL,
+  email  VARCHAR(120)
+);
+INSERT INTO clientes (id, nombre, email) VALUES
+  (1, 'Ana Torres',  'ana@mail.com'),
+  (2, 'Luis Pérez',  'luis@mail.com'),
+  (3, 'María Gómez', 'ana@mail.com'),
+  (4, 'Carla Ruiz',  NULL);
+
+CREATE TABLE productos (
+  id        INT PRIMARY KEY,
+  nombre    VARCHAR(60),
+  categoria VARCHAR(30),
+  precio    DECIMAL(10,2)
+);
+INSERT INTO productos (id, nombre, categoria, precio) VALUES
+  (1, 'Café Sierra', 'Café',   32000),
+  (2, 'Café Huila',  'café',   28000),
+  (3, 'Té verde',    'Té',     12000),
+  (4, 'Galletas',    'Snack',  -5000),
+  (5, 'Chocolate',   'Snack',      0);
+
+CREATE TABLE pedidos (
+  id         INT PRIMARY KEY,
+  cliente_id INT,
+  fecha      DATE,
+  total      DECIMAL(10,2)
+);
+INSERT INTO pedidos (id, cliente_id, fecha, total) VALUES
+  (1, 1, '2024-01-10', 64000),
+  (2, 2, NULL,         28000),
+  (3, 99, '2024-02-01', 12000),
+  (4, 1, '2024-02-15', 99999);
+
+CREATE TABLE items_pedido (
+  id          INT PRIMARY KEY,
+  pedido_id   INT,
+  producto_id INT,
+  cantidad    INT,
+  precio_unit DECIMAL(10,2)
+);
+INSERT INTO items_pedido (id, pedido_id, producto_id, cantidad, precio_unit) VALUES
+  (1, 1, 1, 2, 32000),
+  (2, 4, 3, 1, 12000),
+  (3, 4, 1, 1, 32000);
+```
+</details>
+
+
+### Básico — `auditoria-basico-fechas`
+
+**Enunciado.** Auditá los pedidos incompletos: listá el id de los pedidos que no tienen fecha registrada.
+
+
+**Solución**
+
+```sql
+SELECT id FROM pedidos WHERE fecha IS NULL;
+```
+
+
+💡 _Pista:_ Una columna vacía se compara con IS NULL, nunca con = NULL.
+
+
+**Resultado esperado** (1 fila)
+
+
+| id |
+| --- |
+| 2 |
+
+
+### Básico — `auditoria-basico-precios`
+
+**Enunciado.** Encontrá los productos con precio inválido: mostrá nombre y precio de los que tienen precio menor o igual a 0.
+
+
+**Solución**
+
+```sql
+SELECT nombre, precio FROM productos WHERE precio <= 0;
+```
+
+
+💡 _Pista:_ Un precio válido es mayor que 0; lo demás es un dato corrupto.
+
+
+**Resultado esperado** (2 filas)
+
+
+| nombre | precio |
+| --- | --- |
+| Galletas | -5000 |
+| Chocolate | 0 |
+
+
+### Intermedio — `auditoria-intermedio-duplicados`
+
+**Enunciado.** Detectá emails duplicados entre clientes: mostrá el email y cuántas veces aparece (columna 'veces'), solo los que se repiten.
+
+
+**Solución**
+
+```sql
+SELECT email, COUNT(*) AS veces FROM clientes GROUP BY email HAVING COUNT(*) > 1;
+```
+
+
+💡 _Pista:_ Agrupá por email y quedate con los grupos cuyo COUNT(*) sea mayor a 1.
+
+
+**Resultado esperado** (1 fila)
+
+
+| email | veces |
+| --- | --- |
+| ana@mail.com | 2 |
+
+
+### Intermedio — `auditoria-intermedio-reparar-notnull`
+
+**Enunciado.** Este INSERT falla con el error: La columna "nombre" no admite NULL. Registrá al cliente correctamente con id 5, nombre 'Diego Soto' y email 'diego@mail.com'.
+
+
+**Solución**
+
+```sql
+INSERT INTO clientes (id, nombre, email) VALUES (5, 'Diego Soto', 'diego@mail.com');
+```
+
+
+**Verificación** (SELECT que inspecciona el estado tras la operación)
+
+```sql
+SELECT id, nombre, email FROM clientes ORDER BY id;
+```
+
+
+💡 _Pista:_ La columna nombre es NOT NULL: tiene que llevar un valor real, no NULL.
+
+
+**Resultado esperado** (5 filas)
+
+
+| id | nombre | email |
+| --- | --- | --- |
+| 1 | Ana Torres | ana@mail.com |
+| 2 | Luis Pérez | luis@mail.com |
+| 3 | María Gómez | ana@mail.com |
+| 4 | Carla Ruiz | NULL |
+| 5 | Diego Soto | diego@mail.com |
+
+
+### Avanzado — `auditoria-avanzado-huerfanos`
+
+**Enunciado.** Encontrá los pedidos huérfanos: aquellos cuyo cliente_id no corresponde a ningún cliente real. Mostrá el id del pedido y su cliente_id.
+
+
+**Solución**
+
+```sql
+SELECT p.id, p.cliente_id FROM pedidos p LEFT JOIN clientes c ON p.cliente_id = c.id WHERE c.id IS NULL;
+```
+
+
+💡 _Pista:_ Un LEFT JOIN con clientes deja en NULL el lado derecho cuando no hay coincidencia.
+
+
+**Resultado esperado** (1 fila)
+
+
+| id | cliente_id |
+| --- | --- |
+| 3 | 99 |
+
+
+### Avanzado — `auditoria-avanzado-reparar-total`
+
+**Enunciado.** El pedido 4 tiene un total mal cargado (99999) que no coincide con la suma real de sus ítems. Corregí el total del pedido 4 para que sea la suma de cantidad × precio_unit de sus ítems.
+
+
+**Solución**
+
+```sql
+UPDATE pedidos SET total = 44000 WHERE id = 4;
+```
+
+
+**Verificación** (SELECT que inspecciona el estado tras la operación)
+
+```sql
+SELECT id, total FROM pedidos ORDER BY id;
+```
+
+
+💡 _Pista:_ Los ítems del pedido 4 son 1×12000 y 1×32000. Sumá: 44000.
+
+
+**Resultado esperado** (4 filas)
+
+
+| id | total |
+| --- | --- |
+| 1 | 64000 |
+| 2 | 28000 |
+| 3 | 12000 |
+| 4 | 44000 |
 
 
 ---
